@@ -1,10 +1,13 @@
 from datetime import datetime, timezone
 import shutil
 
-from fastapi import BackgroundTasks, FastAPI, HTTPException
+from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uuid
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from scanner.gitleaks_runner import run_gitleaks
 from scanner.semgrep_runner import run_semgrep
@@ -14,7 +17,10 @@ from models.scan import ScanResult, ScanStatus
 class ScanRequest(BaseModel):
       repo_url: str
 
+limiter = Limiter(key_func=get_remote_address)
 app = FastAPI()
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 scans: dict[str, ScanResult] = {}
@@ -24,12 +30,13 @@ def health():
       return {'status': 'healthy'}
 
 @app.post("/scan")
-def start_scan(request: ScanRequest, background_tasks: BackgroundTasks):
-      if not request.repo_url.startswith('https://github.com/'):
+@limiter.limit("5/minute")
+def start_scan(request: Request, scan_request: ScanRequest, background_tasks: BackgroundTasks):
+      if not scan_request.repo_url.startswith('https://github.com/'):
             raise HTTPException(status_code=400, detail='Only GitHub URLs are supported')
       
       scan_id = str(uuid.uuid4())
-      scans[scan_id] = ScanResult(scan_id=scan_id, status=ScanStatus.PENDING, repo_url=request.repo_url, created_at=datetime.now(timezone.utc).isoformat())
+      scans[scan_id] = ScanResult(scan_id=scan_id, status=ScanStatus.PENDING, repo_url=scan_request.repo_url, created_at=datetime.now(timezone.utc).isoformat())
       background_tasks.add_task(run_scan, scan_id)
 
       return {'scan_id': scan_id, 'status': 'pending'}
