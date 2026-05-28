@@ -1,33 +1,28 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from "next"
+import { JetBrains_Mono } from "next/font/google"
+import "./globals.css"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+  variable: "--font-jetbrains",
+})
 
 export const metadata: Metadata = {
-  title: "VibeVetted",
-  description: "Vibe Coding Security checker",
-};
+  title: "Vibe Vetted",
+  description: "Security scanner for vibe-coded apps",
+}
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={jetbrainsMono.variable}>
+      <body className="min-h-screen bg-bg text-text font-mono antialiased">
+        {/* z-[2] keeps content above the fixed z-1 scanline overlay */}
+        <div className="relative z-[2]">{children}</div>
+      </body>
     </html>
-  );
+  )
 }
