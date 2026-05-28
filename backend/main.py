@@ -9,6 +9,7 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
+from llm.explainer import explain_findings
 from scanner.gitleaks_runner import run_gitleaks
 from scanner.semgrep_runner import run_semgrep
 from scanner.clone import clone_repo
@@ -57,6 +58,7 @@ def run_scan(scan_id:str):
         
         findings+= run_semgrep(repo)
         findings+= run_gitleaks(repo)
+        findings = explain_findings(findings)
         
         scans[scan_id].status = ScanStatus.DONE
         scans[scan_id].findings = findings
