@@ -8,16 +8,19 @@ export default function Home() {
   const router = useRouter()
   const [url, setUrl] = useState("")
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
     const trimmed = url.trim()
     if (!trimmed || loading) return
     setLoading(true)
+    setError(null)
     try {
       const { scan_id } = await startScan(trimmed)
       router.push(`/results/${scan_id}`)
-    } catch {
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not reach backend")
       setLoading(false)
     }
   }
@@ -79,6 +82,11 @@ export default function Home() {
             <span className="text-border-2">·</span>
             <span>~30s avg</span>
           </div>
+
+          {/* Error message */}
+          {error && (
+            <p className="mt-3 text-sev-crit text-xs text-center">{error}</p>
+          )}
         </form>
 
         {/* Example repo pills */}
@@ -101,7 +109,8 @@ export default function Home() {
           {"─".repeat(200)}
         </div>
 
-        {/* Trust stats */}
+        {/* Trust stats — hidden until real values are available */}
+        {false && (
         <div className="grid grid-cols-3 gap-6 my-6">
           {[
             { num: "2,847",  lbl: "repos scanned" },
@@ -113,7 +122,7 @@ export default function Home() {
               <div className="text-[11px] text-text-dimmer mt-0.5">{lbl}</div>
             </div>
           ))}
-        </div>
+        </div>)}
 
         {/* Footer */}
         <footer className="flex flex-wrap justify-center items-center gap-2 mt-6 text-text-dimmer text-xs">
