@@ -86,6 +86,8 @@ export default function ResultsPage() {
     SEVERITIES.map((sev) => [sev, result.findings.filter((f) => f.severity === sev)])
   ) as Record<Severity, Finding[]>
 
+  const firstSev = SEVERITIES.find((sev) => grouped[sev].length > 0)
+
   return (
     <div>
 
@@ -135,8 +137,8 @@ export default function ResultsPage() {
                 <span className="flex-1 h-px bg-gradient-to-r from-current to-transparent opacity-40 ml-1.5" />
               </h2>
               <div className="flex flex-col gap-3">
-                {items.map((finding) => (
-                  <FindingCard key={finding.id} finding={finding} />
+                {items.map((finding, i) => (
+                  <FindingCard key={finding.id} finding={finding} defaultOpen={sev === firstSev && i === 0} />
                 ))}
               </div>
             </section>

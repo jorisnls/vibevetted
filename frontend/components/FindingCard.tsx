@@ -11,7 +11,7 @@ function renderExplanation(text: string) {
   return parts.map((part, i) => {
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
-        <strong key={i} className="font-semibold text-text">
+        <strong key={i} className="font-semibold text-accent">
           {part.slice(2, -2)}
         </strong>
       )
@@ -20,8 +20,8 @@ function renderExplanation(text: string) {
   })
 }
 
-export default function FindingCard({ finding }: { finding: Finding }) {
-  const [open, setOpen] = useState(false)
+export default function FindingCard({ finding, defaultOpen = false }: { finding: Finding, defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen)
   const meta = SEVERITY_META[finding.severity]
 
   return (
@@ -29,46 +29,48 @@ export default function FindingCard({ finding }: { finding: Finding }) {
 
       {/* Header — click anywhere to expand/collapse */}
       <button
-        className="w-full flex items-center justify-between px-[18px] pt-3 pb-2 text-left cursor-pointer"
+        className="w-full flex flex-col px-[18px] pt-3 pb-[14px] text-left cursor-pointer"
         onClick={() => setOpen((o) => !o)}
       >
-        <div className="flex items-center gap-[10px]">
-          <SeverityBadge severity={finding.severity} />
-          <span className="text-[11px] px-2 py-[3px] bg-bg-1 border border-border-2 text-text-dim rounded-[4px]">
-            {finding.tool}
-          </span>
-          <span className="text-[11px] text-text-dimmer">#{finding.id}</span>
-        </div>
-        <div className="flex items-center gap-[10px]">
-          {finding.cwe && (
-            <span className="text-[11px] text-text-dimmer px-2 py-[3px] border border-border rounded-[4px]">
-              {finding.cwe}
+        {/* Top row: badges + chevron */}
+        <div className="flex items-center justify-between w-full mb-2">
+          <div className="flex items-center gap-[10px]">
+            <SeverityBadge severity={finding.severity} />
+            <span className="text-[11px] px-2 py-[3px] bg-bg-1 border border-border-2 text-text-dim rounded-[4px]">
+              {finding.tool}
             </span>
+            <span className="text-[11px] text-text-dimmer">#{finding.id}</span>
+          </div>
+          <div className="flex items-center gap-[10px]">
+            {finding.cwe && (
+              <span className="text-[11px] text-text-dimmer px-2 py-[3px] border border-border rounded-[4px]">
+                {finding.cwe}
+              </span>
+            )}
+            <span className={`text-text-dimmer text-sm transition-transform duration-[180ms] inline-block ${open ? "rotate-90 text-accent" : ""}`}>
+              ▸
+            </span>
+          </div>
+        </div>
+
+        {/* Bottom row: title + file:line */}
+        <div className="flex flex-wrap justify-between items-baseline gap-[10px] w-full">
+          <div className="text-[15px] font-semibold text-text tracking-[-0.005em] break-all">
+            {finding.title}
+          </div>
+          {finding.file_path && (
+            <div className="text-[12.5px] text-text-dim font-mono">
+              <span>{finding.file_path}</span>
+              {finding.line_number !== null && (
+                <>
+                  <span className="text-text-dimmer">:</span>
+                  <span className={meta.text}>{finding.line_number}</span>
+                </>
+              )}
+            </div>
           )}
-          {/* Chevron rotates 90° when open */}
-          <span className={`text-text-dimmer text-sm transition-transform duration-[180ms] inline-block ${open ? "rotate-90 text-accent" : ""}`}>
-            ▸
-          </span>
         </div>
       </button>
-
-      {/* Title + file:line */}
-      <div className="flex flex-wrap justify-between items-baseline gap-[10px] px-[18px] pb-[14px]">
-        <div className="text-[15px] font-semibold text-text tracking-[-0.005em] break-all">
-          {finding.title}
-        </div>
-        {finding.file_path && (
-          <div className="text-[12.5px] text-text-dim font-mono">
-            <span>{finding.file_path}</span>
-            {finding.line_number !== null && (
-              <>
-                <span className="text-text-dimmer">:</span>
-                <span className={meta.text}>{finding.line_number}</span>
-              </>
-            )}
-          </div>
-        )}
-      </div>
 
       {/* Expanded body — only rendered when open */}
       {open && (
