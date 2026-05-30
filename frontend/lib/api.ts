@@ -43,3 +43,11 @@ export async function getScanResult(scanId:string): Promise<ScanResult> {
     if (!res.ok) throw new Error(await res.text())
     return res.json()
 }
+
+export type Stats = { repos_scanned: number; vulns_found: number }
+
+export async function getStats(): Promise<Stats> {
+    const res = await fetch(`${BACKEND_URL}/stats`)
+    if (!res.ok) throw new Error(await res.text())
+    return res.json()
+}

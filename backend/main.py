@@ -14,6 +14,7 @@ from scanner.gitleaks_runner import run_gitleaks
 from scanner.semgrep_runner import run_semgrep
 from scanner.clone import clone_repo
 from models.scan import ScanResult, ScanStatus
+import stats as stats_db
 
 class ScanRequest(BaseModel):
       repo_url: str
@@ -24,7 +25,12 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
+stats_db.init_db()
 scans: dict[str, ScanResult] = {}
+
+@app.get("/stats")
+def get_stats():
+    return stats_db.get_stats()
 
 @app.get("/health")
 def health():
@@ -70,6 +76,7 @@ def run_scan(scan_id:str):
             "low": sum(1 for f in findings if f.severity.value == "low"),
         }
         scans[scan_id].completed_at = datetime.now(timezone.utc).isoformat()
+        stats_db.increment(repos=1, vulns=len(findings))
 
       except Exception as e:
         scans[scan_id].status = ScanStatus.FAILED

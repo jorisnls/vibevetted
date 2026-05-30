@@ -1,14 +1,19 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { startScan } from "@/lib/api"
+import { startScan, getStats, type Stats } from "@/lib/api"
 
 export default function Home() {
   const router = useRouter()
   const [url, setUrl] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [stats, setStats] = useState<Stats | null>(null)
+
+  useEffect(() => {
+    getStats().then(setStats).catch(() => {})
+  }, [])
 
   async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
@@ -109,13 +114,13 @@ export default function Home() {
           {"─".repeat(200)}
         </div>
 
-        {/* Trust stats — hidden until real values are available */}
-        {false && (
+        {/* Trust stats */}
+        {stats && (
         <div className="grid grid-cols-3 gap-6 my-6">
           {[
-            { num: "2,847",  lbl: "repos scanned" },
-            { num: "19,402", lbl: "vulns found"   },
-            { num: "$0",     lbl: "stored. ever." },
+            { num: stats.repos_scanned.toLocaleString(), lbl: "repos scanned" },
+            { num: stats.vulns_found.toLocaleString(),   lbl: "vulns found"   },
+            { num: "$0",                                  lbl: "stored. ever." },
           ].map(({ num, lbl }) => (
             <div key={lbl} className="text-center">
               <div className="text-[22px] text-text font-semibold tracking-[-0.02em]">{num}</div>
