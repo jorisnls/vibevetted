@@ -4,3 +4,8 @@ backend/.env
 __pycache__/
 *.pyc
 .DS_Store
+
+# SQLite stats DB (lives on the server, written at runtime)
+backend/stats.db
+backend/stats.db-wal
+backend/stats.db-shm
