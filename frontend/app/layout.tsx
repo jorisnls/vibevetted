@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { JetBrains_Mono } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
 const jetbrainsMono = JetBrains_Mono({
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-bg text-text font-mono antialiased">
         {/* z-[2] keeps content above the fixed z-1 scanline overlay */}
         <div className="relative z-[2]">{children}</div>
+        <Analytics />
       </body>
     </html>
   )
