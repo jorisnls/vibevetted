@@ -88,6 +88,16 @@ export default function Home() {
             <span>~30s avg</span>
           </div>
 
+          {/* Supported languages */}
+          <div className="flex flex-wrap justify-center items-center gap-x-[10px] gap-y-1 mt-2 text-text-dimmer text-xs">
+            <span>deepest coverage:</span>
+            <code className="text-accent-dim">JavaScript</code>
+            <code className="text-accent-dim">TypeScript</code>
+            <code className="text-accent-dim">Python</code>
+            <span className="text-border-2">·</span>
+            <span>secrets scanned in any repo</span>
+          </div>
+
           {/* Error message */}
           {error && (
             <p className="mt-3 text-sev-crit text-xs text-center">{error}</p>
@@ -139,6 +149,16 @@ export default function Home() {
           <code className="text-accent-dim">llms</code>
           <span className="text-border-2 mx-1">//</span>
           <span>built for the vibe coders</span>
+          <span className="text-border-2 mx-1">//</span>
+          <a
+            href="https://www.flaticon.com/free-icons/security"
+            title="security icons"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-dotted underline-offset-2 hover:text-accent-dim transition-colors"
+          >
+            icon by Freepik · Flaticon
+          </a>
         </footer>
 
       </div>
