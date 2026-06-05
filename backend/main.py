@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 import shutil
+import threading
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -28,6 +29,9 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 stats_db.init_db()
 scans: dict[str, ScanResult] = {}
 
+MAX_CONCURRENT_SCANS = 5
+_scan_slots = threading.BoundedSemaphore(MAX_CONCURRENT_SCANS)
+
 @app.get("/stats")
 def get_stats():
     return stats_db.get_stats()
@@ -41,7 +45,10 @@ def health():
 def start_scan(request: Request, scan_request: ScanRequest, background_tasks: BackgroundTasks):
       if not scan_request.repo_url.startswith('https://github.com/'):
             raise HTTPException(status_code=400, detail='Only GitHub URLs are supported')
-      
+
+      if not _scan_slots.acquire(blocking=False):
+            raise HTTPException(status_code=503, detail='Server is at capacity, please try again in a moment')
+
       scan_id = str(uuid.uuid4())
       scans[scan_id] = ScanResult(scan_id=scan_id, status=ScanStatus.PENDING, repo_url=scan_request.repo_url, created_at=datetime.now(timezone.utc).isoformat())
       background_tasks.add_task(run_scan, scan_id)
@@ -84,3 +91,4 @@ def run_scan(scan_id:str):
       
       finally:
         shutil.rmtree(f"/tmp/{scan_id}", ignore_errors=True)
+        _scan_slots.release()
