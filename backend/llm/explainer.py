@@ -7,7 +7,7 @@ dotenv.load_dotenv()
 client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
 
 def explain_findings(findings: list[Finding]) -> list[Finding]:
-    for finding in findings[:50]:
+    for finding in findings[:25]:
         prompt = f"""
         You are a security expert helping indie hackers understand and fix security issues in their vibe-coded apps.
 
