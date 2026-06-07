@@ -28,4 +28,4 @@ jobs:
             git reset --hard origin/main
             cd backend
             venv/bin/pip install -r requirements.txt
-            sudo systemctl restart vibevetted-backend
+            systemctl restart vibevetted-backend
