@@ -6,7 +6,12 @@ import os
 dotenv.load_dotenv()
 client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
 
+SEVERITY_ORDER = {"critical": 0, "high": 1, "medium": 2, "low": 3}
+
+
 def explain_findings(findings: list[Finding]) -> list[Finding]:
+    findings.sort(key=lambda f: SEVERITY_ORDER.get(f.severity.value, 99))
+
     for finding in findings[:25]:
         prompt = f"""
         You are a security expert helping indie hackers understand and fix security issues in their vibe-coded apps.
