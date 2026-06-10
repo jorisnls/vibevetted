@@ -8,6 +8,7 @@ import type { ScanResult, Severity, Finding } from "@/lib/api"
 import LoadingState from "@/components/LoadingState"
 import ScanSummary from "@/components/ScanSummary"
 import FindingCard from "@/components/FindingCard"
+import EmailCapture from "@/components/EmailCapture"
 import { SEVERITY_META } from "@/lib/severity"
 
 const SEVERITIES: Severity[] = ["critical", "high", "medium", "low"]
@@ -16,6 +17,13 @@ export default function ResultsPage() {
   const { scanId } = useParams<{ scanId: string }>()
   const [result, setResult] = useState<ScanResult | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+
+  function copyLink() {
+    navigator.clipboard.writeText(window.location.href)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   useEffect(() => {
     let stopped = false
@@ -118,6 +126,16 @@ export default function ResultsPage() {
       <main className="max-w-[1080px] mx-auto px-7 py-8">
         <ScanSummary result={result} />
 
+        {/* Share bar */}
+        <div className="flex items-center gap-3 mt-4">
+          <button
+            onClick={copyLink}
+            className="text-xs px-3 py-[7px] border border-border rounded-[5px] text-text-dim hover:text-accent hover:border-accent-dim transition-colors duration-[120ms]"
+          >
+            {copied ? "✓ copied" : "copy link"}
+          </button>
+        </div>
+
         {/* Divider */}
         <div className="text-border-2 overflow-hidden whitespace-nowrap select-none text-xs leading-none my-8" aria-hidden="true">
           {"─".repeat(200)}
@@ -145,8 +163,17 @@ export default function ResultsPage() {
           )
         })}
 
+        {/* Email capture */}
+        <section className="mt-12 border border-border rounded-[10px] bg-surface px-7 py-6">
+          <div className="text-text-dimmer text-[11px] tracking-[0.1em] mb-3">// private repo scanning — coming soon</div>
+          <p className="text-text-dim text-sm mb-4">
+            Scan your private repos. Get notified when it launches.
+          </p>
+          <EmailCapture />
+        </section>
+
         {/* Footer */}
-        <footer className="mt-12 pt-6 border-t border-border flex justify-between text-text-dimmer text-xs">
+        <footer className="mt-8 pt-6 border-t border-border flex justify-between text-text-dimmer text-xs">
           <div>end of report // {result.findings.length} findings</div>
           <div className="text-accent">
             $ echo &quot;ship it&quot;
