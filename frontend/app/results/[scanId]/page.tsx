@@ -136,6 +136,10 @@ export default function ResultsPage() {
           </button>
         </div>
 
+        <p className="mt-4 text-xs text-text-dimmer">
+          Results may include false positives — review each finding in context.
+        </p>
+
         {/* Divider */}
         <div className="text-border-2 overflow-hidden whitespace-nowrap select-none text-xs leading-none my-8" aria-hidden="true">
           {"─".repeat(200)}

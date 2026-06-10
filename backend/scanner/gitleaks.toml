@@ -1,0 +1,28 @@
+title = "vibevetted gitleaks config"
+
+[allowlist]
+description = "filter placeholders, examples, and low-signal patterns"
+regexTarget = "secret"
+regexes = [
+    # Obvious placeholders
+    '''(?i)^(your[-_]?api[-_]?key|your[-_]?secret|your[-_]?token|your[-_]?password)$''',
+    '''(?i)(example|placeholder|changeme|replace.?me|insert.?here|goes.?here)''',
+    '''(?i)^(fake|dummy|sample|test[-_]?key|demo[-_]?key|mock)''',
+    '''(?i)(test|demo|fake|dummy|sample|placeholder|example)[_-]?(secret|key|token|password)''',
+    # Template variables
+    '''<[A-Z_][A-Z0-9_]*>''',
+    '''\$\{[A-Z_][A-Z0-9_]*\}''',
+    '''\{\{[^}]+\}\}''',
+    # Repetitive / low-entropy patterns
+    '''^(.)\1{6,}$''',
+    '''(?i)^(abc|xyz|foo|bar|baz|qux|test|1234|asdf)''',
+    # Common doc/README patterns
+    '''(?i)^(sk-|pk-|rk-)?(test|example|sample|fake|demo|placeholder)''',
+]
+
+paths = [
+    '''(?i)\.(md|txt|rst|example|sample|template)$''',
+    '''(?i)(readme|changelog|license|contributing|docs?)''',
+    '''(?i)(test|spec|fixture|mock|__test__|__mock__)''',
+    '''(?i)\.(env\.example|env\.sample|env\.template)$''',
+]
