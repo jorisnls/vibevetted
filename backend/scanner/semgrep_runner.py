@@ -68,6 +68,10 @@ def run_semgrep(repo_path: Path) -> list[Finding]:
         if metadata.get("confidence", "").upper() == "LOW":
             continue
 
+        file_path = r["path"]
+        if re.search(r'(?i)(deprecated|legacy|archive|old|backup|\.bak)', file_path):
+            continue
+
         severity_map = {"ERROR": "critical", "WARNING": "high"}
         severity = severity_map.get(r["extra"]["severity"].upper(), "medium")
 
