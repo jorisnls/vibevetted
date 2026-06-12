@@ -58,7 +58,7 @@ export default function ResultsPage() {
   // Network / fetch error
   if (error) {
     return (
-      <div className="min-h-screen grid place-items-center p-8 font-mono text-center">
+      <div className="min-h-screen grid place-items-center p-5 font-mono text-center md:p-8">
         <div>
           <p className="text-sev-crit text-sm mb-4">error: {error}</p>
           <Link href="/" className="text-accent text-sm hover:underline">
@@ -77,7 +77,7 @@ export default function ResultsPage() {
   // Backend reported a scan failure
   if (result.status === "failed") {
     return (
-      <div className="min-h-screen grid place-items-center p-8 font-mono text-center">
+      <div className="min-h-screen grid place-items-center p-5 font-mono text-center md:p-8">
         <div>
           <p className="text-text-dim text-sm mb-2">scan failed</p>
           <p className="text-sev-crit text-xs mb-6">{result.error ?? "unknown error"}</p>
@@ -100,7 +100,10 @@ export default function ResultsPage() {
     <div>
 
       {/* Sticky header */}
-      <header className="sticky top-0 z-10 flex items-center gap-6 px-7 py-4 border-b border-border bg-bg/70 backdrop-blur-sm">
+      <header
+        className="sticky top-0 z-10 flex items-center gap-3 px-4 py-3 border-b border-border bg-bg/70 backdrop-blur-sm md:gap-6 md:px-7 md:py-4"
+        style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}
+      >
         <Link
           href="/"
           className="text-text-dim text-[13px] inline-flex items-center gap-1.5 px-[10px] py-1.5 rounded-[5px] hover:text-accent hover:bg-accent-bg transition-colors duration-[120ms]"
@@ -123,7 +126,10 @@ export default function ResultsPage() {
       </header>
 
       {/* Main content */}
-      <main className="max-w-[1080px] mx-auto px-7 py-8">
+      <main
+        className="max-w-[1080px] mx-auto px-4 py-6 md:px-7 md:py-8"
+        style={{ paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}
+      >
         <ScanSummary result={result} />
 
         {/* Share bar */}
@@ -168,7 +174,7 @@ export default function ResultsPage() {
         })}
 
         {/* Email capture */}
-        <section className="mt-12 border border-border rounded-[10px] bg-surface px-7 py-6">
+        <section className="mt-12 border border-border rounded-[10px] bg-surface px-5 py-5 md:px-7 md:py-6">
           <div className="text-text-dimmer text-[11px] tracking-[0.1em] mb-3">// private repo scanning — coming soon</div>
           <p className="text-text-dim text-sm mb-4">
             Scan your private repos. Get notified when it launches.
@@ -177,7 +183,7 @@ export default function ResultsPage() {
         </section>
 
         {/* Footer */}
-        <footer className="mt-8 pt-6 border-t border-border flex justify-between text-text-dimmer text-xs">
+        <footer className="mt-8 pt-6 border-t border-border flex flex-wrap justify-between gap-2 text-text-dimmer text-xs">
           <div>end of report // {result.findings.length} findings</div>
           <div className="text-accent">
             $ echo &quot;ship it&quot;

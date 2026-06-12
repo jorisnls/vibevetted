@@ -29,11 +29,11 @@ export default function FindingCard({ finding, defaultOpen = false }: { finding:
 
       {/* Header — click anywhere to expand/collapse */}
       <button
-        className="w-full flex flex-col px-[18px] pt-3 pb-[14px] text-left cursor-pointer"
+        className="w-full flex flex-col px-4 pt-3 pb-[14px] text-left cursor-pointer md:px-[18px]"
         onClick={() => setOpen((o) => !o)}
       >
         {/* Top row: badges + chevron */}
-        <div className="flex items-center justify-between w-full mb-2">
+        <div className="flex flex-wrap items-center justify-between gap-y-2 w-full mb-2">
           <div className="flex items-center gap-[10px]">
             <SeverityBadge severity={finding.severity} />
             <span className="text-[11px] px-2 py-[3px] bg-bg-1 border border-border-2 text-text-dim rounded-[4px]">
@@ -59,7 +59,7 @@ export default function FindingCard({ finding, defaultOpen = false }: { finding:
             {finding.title}
           </div>
           {finding.file_path && (
-            <div className="text-[12.5px] text-text-dim font-mono">
+            <div className="text-[12.5px] text-text-dim font-mono break-all">
               <span>{finding.file_path}</span>
               {finding.line_number !== null && (
                 <>
@@ -74,7 +74,7 @@ export default function FindingCard({ finding, defaultOpen = false }: { finding:
 
       {/* Expanded body — only rendered when open */}
       {open && (
-        <div className="border-t border-dashed border-border px-[18px] py-4 bg-gradient-to-b from-black/15 to-transparent">
+        <div className="border-t border-dashed border-border px-4 py-4 bg-gradient-to-b from-black/15 to-transparent md:px-[18px]">
           <div className="bg-bg-1 border border-border rounded-md p-4">
 
             {/* Section header */}
@@ -87,7 +87,7 @@ export default function FindingCard({ finding, defaultOpen = false }: { finding:
             </div>
 
             {/* The explanation string with **bold** rendered */}
-            <p className="text-text text-[13px] leading-[1.65] whitespace-pre-wrap font-mono">
+            <p className="text-text text-[13px] leading-[1.65] whitespace-pre-wrap font-mono break-words">
               {renderExplanation(finding.fix_explanation)}
             </p>
 
@@ -98,7 +98,7 @@ export default function FindingCard({ finding, defaultOpen = false }: { finding:
                   href={`https://cwe.mitre.org/data/definitions/${finding.cwe.replace("CWE-", "")}.html`}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs text-accent hover:underline"
+                  className="inline-flex items-center gap-1.5 text-xs text-accent underline decoration-dotted underline-offset-2"
                 >
                   <span>↗</span>
                   read {finding.cwe} on cwe.mitre.org

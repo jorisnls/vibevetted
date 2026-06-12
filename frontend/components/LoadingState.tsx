@@ -39,7 +39,7 @@ export default function LoadingState({ repoUrl }: { repoUrl: string }) {
   const displayRepo = repoUrl.replace(/^https?:\/\//, "")
 
   return (
-    <div className="min-h-screen grid place-items-center p-6">
+    <div className="min-h-screen grid place-items-center p-4 md:p-6">
       <div className="w-full max-w-[760px] bg-surface border border-border-2 rounded-[10px] overflow-hidden shadow-[0_0_0_1px_rgba(0,0,0,0.4),0_30px_80px_-30px_rgba(0,0,0,0.8)]">
 
         {/* macOS-style window chrome */}
@@ -59,7 +59,7 @@ export default function LoadingState({ repoUrl }: { repoUrl: string }) {
               <div key={i} className="grid grid-cols-[18px_1fr_auto] items-baseline gap-[10px] py-[3px] text-[13px]">
                 <span className="text-accent font-bold">✓</span>
                 <span className="text-text">{step.label}</span>
-                <span className="text-text-dimmer text-xs">{step.detail}</span>
+                <span className="text-text-dimmer text-xs truncate">{step.detail}</span>
               </div>
             ))}
 
@@ -68,7 +68,7 @@ export default function LoadingState({ repoUrl }: { repoUrl: string }) {
               <div className="grid grid-cols-[18px_1fr_auto] items-baseline gap-[10px] py-[3px] text-[13px]">
                 <span className="text-accent">{spinner}</span>
                 <span className="text-accent">{currentStep.label}...</span>
-                <span className="text-text-dim text-xs">{currentStep.detail}</span>
+                <span className="text-text-dim text-xs truncate">{currentStep.detail}</span>
               </div>
             ) : (
               <div className="grid grid-cols-[18px_1fr_auto] items-baseline gap-[10px] py-[3px] text-[13px]">

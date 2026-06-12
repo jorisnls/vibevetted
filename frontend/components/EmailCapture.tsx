@@ -38,12 +38,12 @@ export default function EmailCapture() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="your@email.com"
-        className="bg-bg-1 border border-border rounded-[5px] px-3 py-[7px] text-sm text-text placeholder:text-text-dimmer focus:outline-none focus:border-accent transition-colors duration-[120ms] w-56"
+        className="bg-bg-1 border border-border rounded-[5px] px-3 py-2.5 text-sm text-text placeholder:text-text-dimmer focus:outline-none focus:border-accent transition-colors duration-[120ms] w-full sm:w-56"
       />
       <button
         type="submit"
         disabled={state === "loading"}
-        className="text-accent text-xs px-3 py-[7px] border border-accent-dim bg-accent-bg rounded-[5px] hover:bg-accent hover:text-bg transition-[background,color] duration-[120ms] disabled:opacity-50"
+        className="text-accent text-xs px-4 py-2.5 border border-accent-dim bg-accent-bg rounded-[5px] hover:bg-accent hover:text-bg active:scale-[0.98] transition-[background,color,transform] duration-[120ms] disabled:opacity-50"
       >
         {state === "loading" ? "..." : "notify me"}
       </button>

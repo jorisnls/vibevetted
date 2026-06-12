@@ -5,6 +5,9 @@ __pycache__/
 *.pyc
 .DS_Store
 
+# Graphify knowledge graph outputs (auto-generated, contains machine-specific paths)
+graphify-out/
+
 # SQLite stats DB (lives on the server, written at runtime)
 backend/stats.db
 backend/stats.db-wal
