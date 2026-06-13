@@ -14,8 +14,8 @@
 
   /* Text */
   --color-text:        #e6e6ec;
-  --color-text-dim:    #8a8a99;
-  --color-text-dimmer: #5a5a6a;
+  --color-text-dim:    #9a9aa8;
+  --color-text-dimmer: #5e5e6e;
 
   /* Accent — phosphor green */
   --color-accent:      #7fff9b;
@@ -28,7 +28,8 @@
   --color-sev-med:     oklch(0.82 0.16 90);
   --color-sev-low:     oklch(0.72 0.14 240);
 
-  /* Font — references the CSS var set by next/font on <html> */
+  /* Fonts */
+  --font-sans: var(--font-geist), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-jetbrains), "IBM Plex Mono", ui-monospace, monospace;
 
   /* Animation */
@@ -50,27 +51,9 @@
     /* Safety net against stray overflow on narrow screens */
     overflow-x: hidden;
 
-    /* Subtle glow: green from top, blue-purple from bottom */
+    /* Subtle green glow from top */
     background-image:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(127, 255, 155, 0.06), transparent 60%),
-      radial-gradient(ellipse 60% 40% at 50% 110%, rgba(127, 155, 255, 0.04), transparent 60%);
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(127, 255, 155, 0.05), transparent 60%);
     background-attachment: fixed;
-  }
-
-  /* Scanline overlay — very faint horizontal lines for the CRT effect */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 2px,
-      rgba(255, 255, 255, 0.012) 2px,
-      rgba(255, 255, 255, 0.012) 3px
-    );
-    pointer-events: none;
-    z-index: 1;
-    mix-blend-mode: overlay;
   }
 }
